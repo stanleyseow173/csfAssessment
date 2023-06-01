@@ -6,4 +6,11 @@ export interface PizzaQuery {
     sauce: string
     toppings: string[]
     comments: string
+    delivered: boolean
+  }
+
+  export interface Order{
+    orderId: string
+    total: string
+    date: string
   }

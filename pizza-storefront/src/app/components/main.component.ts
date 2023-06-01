@@ -1,9 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, Query, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PizzaService } from '../pizza.service';
 import { PizzaQuery } from '../models';
 import { firstValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const SIZES: string[] = [
   "Personal - 6 inches",
@@ -46,10 +47,14 @@ export class MainComponent implements OnInit{
   process() {
     const query = this.form.value as PizzaQuery
     console.info('>>> query: ', query)
+    //query.size="abc"
     //const queryParams: Params =  { units: query.units }
     //this.router.navigate([ '/weather', query.city ], { queryParams: queryParams })
-    const v = firstValueFrom(this.pizzaSvc.placeOrder(query)).then(v =>v)
-    console.info(">>return from controller", v)
+    const v = firstValueFrom(this.pizzaSvc.placeOrder(query))
+              .then(v => v)
+              .catch( (err: HttpErrorResponse) => alert(err.message))
+    console.info("return from server ===============>", v)
+    this.router.navigate([ '/orders', query.email ])
   }
 
   private createForm() {
@@ -63,6 +68,7 @@ export class MainComponent implements OnInit{
       comments: this.fb.control<string>('')
     })
   }
+
 
   onCheckChange(event: any) {
     const formArray: FormArray = this.form.get('toppings') as FormArray;

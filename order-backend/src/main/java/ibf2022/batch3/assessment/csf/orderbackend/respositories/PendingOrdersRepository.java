@@ -20,7 +20,7 @@ public class PendingOrdersRepository {
 	public void add(PizzaOrder order) {
 		Document d = new Document();
 		d.append("orderId", order.getOrderId());
-		d.append("date", order.getDate());
+		d.append("date", String.valueOf(order.getDate().getTime()));
 		d.append("total", order.getTotal());
 		d.append("name", order.getName());
 		d.append("email", order.getEmail());
@@ -31,7 +31,8 @@ public class PendingOrdersRepository {
 	// TODO: Task 7
 	// WARNING: Do not change the method's signature.
 	public boolean delete(String orderId) {
-		return false;
+		
+		return redisTemplate.delete(orderId);
 	}
 
 }
